@@ -22,5 +22,11 @@ namespace MvcCoreLinqToSQL.Controllers
             Enfermo enfermo = this.repo.GetEnfermo(idEnfermo);
             return View(enfermo);
         }
+
+        public async Task<IActionResult>Delete(string idEnfermo)
+        {
+            await this.repo.DeleteEnfermoAsync(idEnfermo);
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -7,6 +7,9 @@ namespace MvcCoreLinqToSQL.Repositories
     public class RepositoryEnfermos
     {
         private DataTable tablaEnfermos;
+        SqlCommand com;
+        SqlDataReader reader;
+        SqlConnection cn;
 
         public RepositoryEnfermos()
         {
@@ -17,7 +20,10 @@ namespace MvcCoreLinqToSQL.Repositories
             //Recuperamos los datos;
             adapter.Fill(this.tablaEnfermos);
 
-            
+            this.cn=new SqlConnection(connectionString);
+            this.com=new SqlCommand();
+            this.com.Connection=this.cn;
+
         }
 
         public List<Enfermo> GetEnfermos()
@@ -31,7 +37,7 @@ namespace MvcCoreLinqToSQL.Repositories
                 enfermo.Inscripcion=row.Field<string>("INSCRIPCION");
                 enfermo.Apellido=row.Field<string>("APELLIDO");
                 enfermo.Direccion=row.Field<string>("DIRECCION");
-                enfermo.Fecha_Nac=row.Field<DateTime>("FECHA_NAC").ToString();
+                enfermo.Fecha_Nac=row.Field<DateTime>("FECHA_NAC").ToLongDateString();
                 enfermo.Sexo=row.Field<string>("S");
                 enfermo.NSegSocial=row.Field<string>("NSS");
                 enfermos.Add(enfermo);
@@ -48,7 +54,7 @@ namespace MvcCoreLinqToSQL.Repositories
             enfermo.Inscripcion=row.Field<string>("INSCRIPCION");
             enfermo.Apellido=row.Field<string>("APELLIDO");
             enfermo.Direccion=row.Field<string>("DIRECCION");
-            enfermo.Fecha_Nac=row.Field<DateTime>("FECHA_NAC").ToString();
+            enfermo.Fecha_Nac=row.Field<DateTime>("FECHA_NAC").ToLongDateString();
             enfermo.Sexo=row.Field<string>("S");
             enfermo.NSegSocial=row.Field<string>("NSS");
 
@@ -58,7 +64,15 @@ namespace MvcCoreLinqToSQL.Repositories
         public async Task DeleteEnfermoAsync(string idEnfermo)
         {
             string sql = "delete from ENFERMO WHERE INSCRIPCION=@idEnfermo";
-            
+            this.com.Parameters.AddWithValue("@idEnfermo", idEnfermo);
+            this.com.CommandType=CommandType.Text;
+            this.com.CommandText=sql;
+
+            await this.cn.OpenAsync();
+            await this.com.ExecuteNonQueryAsync();
+            await this.cn.CloseAsync();
+            this.com.Parameters.Clear();
+
         }
     }
 }
