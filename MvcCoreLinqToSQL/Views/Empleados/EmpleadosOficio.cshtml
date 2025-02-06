@@ -1,10 +1,18 @@
 ﻿@model ResumenEmpleados
+@{
+    List<string> oficios =
+                ViewData["OFICIOS"] as List<string>;
+}
 <h1>
     Lambda Expression LINQ
 </h1>
 <form method="post">
     <label>Oficio:</label>
-    <input type="text" name="oficio" class="form-control" />
+    <select class="form-select" name="oficio">
+        @foreach(string ofi in oficios){
+            <option value="@ofi">@ofi</option>
+        }
+    </select>
     <button class="btn btn-info">
         Buscar empleados
     </button>

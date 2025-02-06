@@ -46,11 +46,13 @@ namespace MvcCoreLinqToSQL.Controllers
         }
         public IActionResult EmpleadosOficio()
         {
+            ViewData["OFICIOS"]=this.repo.GetOficios();
             return View();
         }
         [HttpPost]
         public IActionResult EmpleadosOficio(string oficio)
         {
+            ViewData["OFICIOS"]=this.repo.GetOficios();
             ResumenEmpleados resumen = this.repo.GetEmpleadosOficio(oficio);
             return View(resumen);
         }
